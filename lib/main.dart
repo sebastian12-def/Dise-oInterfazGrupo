@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'features/cart/router/app_router.dart';
+import 'router/app_router.dart';
 
 void main() {
   runApp(const MyApp());
