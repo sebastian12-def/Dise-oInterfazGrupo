@@ -101,6 +101,25 @@ class _CartPageState extends State<CartPage> {
                 child: const Text("Check Out"),
               ),
             ),
+
+            const SizedBox(height: 12),
+            SizedBox(
+              width: 200,
+              child: ElevatedButton(
+                onPressed: (){
+                  Navigator.pushNamed(context, '/order-history');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey[200],
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                child: const Text("Ver historial"),
+             ),
+            ),
           ],
         ),
       ),
