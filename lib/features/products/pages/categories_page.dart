@@ -183,8 +183,8 @@ class _CategoryTile extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                category.color.withOpacity(0.1),
-                category.color.withOpacity(0.05),
+                category.color.withValues(alpha: 0.1),
+                category.color.withValues(alpha: 0.05),
               ],
             ),
           ),
