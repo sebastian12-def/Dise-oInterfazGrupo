@@ -4,7 +4,9 @@ import '../widgets/password_field.dart';
 import '../widgets/auth_button.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final VoidCallback? onLoginSuccess;
+
+  const LoginPage({super.key, this.onLoginSuccess});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -56,6 +58,9 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('¡Inicio de sesión exitoso!')),
       );
+      
+      // Call the callback to update parent state
+      widget.onLoginSuccess?.call();
     }
   }
 
