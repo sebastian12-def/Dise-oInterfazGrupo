@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
 
-class PaymentMethodPage extends StatelessWidget {
+class PaymentMethodPage extends StatefulWidget {
   const PaymentMethodPage({super.key});
+
+  @override
+  State<PaymentMethodPage> createState() => _PaymentMethodPageState();
+}
+
+class _PaymentMethodPageState extends State<PaymentMethodPage> {
+  int selectedIndex = 0;
+
+  final List<Map<String, dynamic>> paymentMethods = [
+    {'icon': Icons.credit_card, 'title': 'Credit Card Or Debit'},
+    {'icon': Icons.account_balance_wallet, 'title': 'Paypal'},
+    {'icon': Icons.account_balance, 'title': 'Bank Transfer'},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -13,33 +26,49 @@ class PaymentMethodPage extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          // CREDIT CARD
-          _PaymentOption(
-            icon: Icons.credit_card,
-            title: "Credit Card Or Debit",
-            selected: true,            // Este aparece seleccionado
-            onTap: () {},
+          Expanded(
+            child: ListView.builder(
+              itemCount: paymentMethods.length,
+              itemBuilder: (context, index) {
+                final method = paymentMethods[index];
+                return _PaymentOption(
+                  icon: method['icon'],
+                  title: method['title'],
+                  selected: selectedIndex == index,
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = index;
+                    });
+                  },
+                );
+              },
+            ),
           ),
 
-          // PAYPAL
-          _PaymentOption(
-            icon: Icons.account_balance_wallet,
-            title: "Paypal",
-            selected: false,
-            onTap: () {},
-          ),
-
-          // BANK TRANSFER
-          _PaymentOption(
-            icon: Icons.account_balance,
-            title: "Bank Transfer",
-            selected: false,
-            onTap: () {},
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/payment-summary');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFECE2F9),
+                  foregroundColor: Colors.deepPurple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: const Text(
+                  "Continue",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -72,13 +101,17 @@ class _PaymentOption extends StatelessWidget {
           children: [
             Icon(icon, size: 28, color: Colors.blue),
             const SizedBox(width: 16),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            )
+            ),
+            if (selected)
+              const Icon(Icons.check_circle, color: Colors.blue),
           ],
         ),
       ),
