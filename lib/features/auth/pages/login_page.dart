@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../widgets/input_field.dart';
 import '../widgets/password_field.dart';
 import '../widgets/auth_button.dart';
+import 'register_page.dart';
+import 'reset_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   final VoidCallback? onLoginSuccess;
@@ -59,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
         const SnackBar(content: Text('¡Inicio de sesión exitoso!')),
       );
       
-      // Call the callback to update parent state
+      // Call the callback to update parent state (AuthEntryPage / MyApp will react)
       widget.onLoginSuccess?.call();
     }
   }
@@ -115,7 +117,12 @@ class _LoginPageState extends State<LoginPage> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/reset-password');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ResetPasswordPage(),
+                          ),
+                        );
                       },
                       child: const Text('¿Olvidaste tu contraseña?'),
                     ),
@@ -135,7 +142,21 @@ class _LoginPageState extends State<LoginPage> {
                       const Text('¿No tienes cuenta?'),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/register');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => RegisterPage(
+                                onNavigateToLogin: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => LoginPage(onLoginSuccess: widget.onLoginSuccess),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
                         },
                         child: const Text('Regístrate'),
                       ),

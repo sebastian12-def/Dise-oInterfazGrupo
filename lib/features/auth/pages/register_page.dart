@@ -4,7 +4,9 @@ import '../widgets/password_field.dart';
 import '../widgets/auth_button.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final VoidCallback? onNavigateToLogin;
+
+  const RegisterPage({super.key, this.onNavigateToLogin});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -83,7 +85,11 @@ class _RegisterPageState extends State<RegisterPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('¡Registro exitoso!')),
       );
-      Navigator.pop(context);
+      if (widget.onNavigateToLogin != null) {
+        widget.onNavigateToLogin!.call();
+      } else {
+        Navigator.pop(context);
+      }
     }
   }
 
@@ -187,7 +193,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   children: [
                     const Text('¿Ya tienes cuenta?'),
                     TextButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        if (widget.onNavigateToLogin != null) {
+                          widget.onNavigateToLogin!.call();
+                        } else {
+                          Navigator.pop(context);
+                        }
+                      },
                       child: const Text('Inicia sesión'),
                     ),
                   ],

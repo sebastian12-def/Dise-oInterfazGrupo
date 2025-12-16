@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'features/products/pages/product_list_page.dart';
 import 'features/products/pages/categories_page.dart';
 import 'features/auth/pages/login_page.dart';
+import 'features/auth/pages/register_page.dart';
+import 'features/auth/pages/auth_entry_page.dart';
 import 'features/cart/pages/cart_page.dart';
 
 void main() {
@@ -41,7 +43,7 @@ class _MyAppState extends State<MyApp> {
       ),
       home: _isLoggedIn
           ? MainNavigationPage(onLogout: _handleLogout)
-          : LoginPage(onLoginSuccess: _handleLoginSuccess),
+          : AuthEntryPage(onLoginSuccess: _handleLoginSuccess),
     );
   }
 }
