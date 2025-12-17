@@ -1,81 +1,64 @@
 import 'package:flutter/material.dart';
+import '../../shared/models/product_model.dart';
 import 'product_list_page.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({super.key});
 
-  // Datos de ejemplo de categorías
-  static final List<CategoryData> categories = [
-    CategoryData(
+  // Datos de ejemplo de categorías - AHORA usando Category del modelo
+  static final List<Category> categories = [
+    Category(
       id: '1',
       name: 'Electrónica',
-      description: 'Smartphones, laptops, audífonos y más',
-      iconData: Icons.devices,
-      color: Colors.blue,
+      iconUrl: '',
       productCount: 45,
     ),
-    CategoryData(
+    Category(
       id: '2',
       name: 'Ropa',
-      description: 'Moda para hombres, mujeres y niños',
-      iconData: Icons.checkroom,
-      color: Colors.pink,
+      iconUrl: '',
       productCount: 120,
     ),
-    CategoryData(
+    Category(
       id: '3',
       name: 'Hogar',
-      description: 'Decoración, muebles y accesorios',
-      iconData: Icons.home,
-      color: Colors.orange,
+      iconUrl: '',
       productCount: 78,
     ),
-    CategoryData(
+    Category(
       id: '4',
       name: 'Deportes',
-      description: 'Equipamiento y ropa deportiva',
-      iconData: Icons.sports_soccer,
-      color: Colors.green,
+      iconUrl: '',
       productCount: 56,
     ),
-    CategoryData(
+    Category(
       id: '5',
       name: 'Libros',
-      description: 'Ficción, educación y más',
-      iconData: Icons.book,
-      color: Colors.brown,
+      iconUrl: '',
       productCount: 200,
     ),
-    CategoryData(
+    Category(
       id: '6',
       name: 'Juguetes',
-      description: 'Diversión para todas las edades',
-      iconData: Icons.toys,
-      color: Colors.purple,
+      iconUrl: '',
       productCount: 89,
     ),
-    CategoryData(
+    Category(
       id: '7',
       name: 'Alimentos',
-      description: 'Productos frescos y empacados',
-      iconData: Icons.restaurant,
-      color: Colors.red,
+      iconUrl: '',
       productCount: 150,
     ),
-    CategoryData(
+    Category(
       id: '8',
       name: 'Belleza',
-      description: 'Cosméticos y cuidado personal',
-      iconData: Icons.face,
-      color: Colors.teal,
+      iconUrl: '',
       productCount: 95,
     ),
-    CategoryData(
+    Category(
       id: '9',
       name: 'Salud',
-      description: 'Vitaminas, suplementos y bienestar',
-      iconData: Icons.health_and_safety,
-      color: Colors.cyan,
+      iconUrl: '',
       productCount: 67,
     ),
   ];
@@ -138,10 +121,13 @@ class CategoriesPage extends StatelessWidget {
                   return _CategoryTile(
                     category: category,
                     onTap: () {
+                      // Ahora pasa la categoría seleccionada
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const ProductListPage(),
+                          builder: (context) => ProductListPage(
+                            category: category, // ← ¡PASA LA CATEGORÍA!
+                          ),
                         ),
                       );
                     },
@@ -157,7 +143,7 @@ class CategoriesPage extends StatelessWidget {
 }
 
 class _CategoryTile extends StatelessWidget {
-  final CategoryData category;
+  final Category category;
   final VoidCallback? onTap;
 
   const _CategoryTile({
@@ -165,8 +151,38 @@ class _CategoryTile extends StatelessWidget {
     this.onTap,
   });
 
+  // Mapeo de nombres de categoría a iconos y colores
+  Map<String, dynamic> _getCategoryStyle(String name) {
+    switch (name.toLowerCase()) {
+      case 'electrónica':
+        return {'icon': Icons.devices, 'color': Colors.blue};
+      case 'ropa':
+        return {'icon': Icons.checkroom, 'color': Colors.pink};
+      case 'hogar':
+        return {'icon': Icons.home, 'color': Colors.orange};
+      case 'deportes':
+        return {'icon': Icons.sports_soccer, 'color': Colors.green};
+      case 'libros':
+        return {'icon': Icons.book, 'color': Colors.brown};
+      case 'juguetes':
+        return {'icon': Icons.toys, 'color': Colors.purple};
+      case 'alimentos':
+        return {'icon': Icons.restaurant, 'color': Colors.red};
+      case 'belleza':
+        return {'icon': Icons.face, 'color': Colors.teal};
+      case 'salud':
+        return {'icon': Icons.health_and_safety, 'color': Colors.cyan};
+      default:
+        return {'icon': Icons.category, 'color': Colors.grey};
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final style = _getCategoryStyle(category.name);
+    final icon = style['icon'] as IconData;
+    final color = style['color'] as Color;
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -183,8 +199,8 @@ class _CategoryTile extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                category.color.withValues(alpha: 0.1),
-                category.color.withValues(alpha: 0.05),
+                color.withOpacity(0.1),
+                color.withOpacity(0.05),
               ],
             ),
           ),
@@ -196,13 +212,13 @@ class _CategoryTile extends StatelessWidget {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: category.color.withOpacity(0.2),
+                  color: color.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
-                  category.iconData,
+                  icon,
                   size: 32,
-                  color: category.color,
+                  color: color,
                 ),
               ),
               const SizedBox(height: 12),
@@ -232,21 +248,4 @@ class _CategoryTile extends StatelessWidget {
   }
 }
 
-// Clase auxiliar para los datos de categoría en esta página
-class CategoryData {
-  final String id;
-  final String name;
-  final String description;
-  final IconData iconData;
-  final Color color;
-  final int productCount;
-
-  CategoryData({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.iconData,
-    required this.color,
-    required this.productCount,
-  });
-}
+// ¡ELIMINADA la clase CategoryData! Ahora usamos Category del modelo

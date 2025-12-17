@@ -1,3 +1,4 @@
+
 class Product {
   final String id;
   final String name;
@@ -11,41 +12,27 @@ class Product {
   Product({
     required this.id,
     required this.name,
-    required this.description,
+    this.description = '', // ← Valor por defecto vacío
     required this.price,
     required this.imageUrl,
     required this.category,
-    this.rating = 0.0,
-    this.stock = 0,
+    this.rating = 0.0, // ← Valor por defecto
+    this.stock = 0,    // ← Valor por defecto
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
-      description: json['description'] ?? '',
+      description: json['description'] ?? '', // Mantener vacío
       price: (json['price'] ?? 0).toDouble(),
-      imageUrl: json['imageUrl'] ?? '',
-      category: json['category'] ?? '',
+      imageUrl: json['imageUrl'] ?? json['image_url'] ?? '', // Soporta ambos nombres
+      category: json['category'] ?? 'General',
       rating: (json['rating'] ?? 0).toDouble(),
-      stock: json['stock'] ?? 0,
+      stock: json['stock'] ?? json['quantity'] ?? 0, // Soporta ambos nombres
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'price': price,
-      'imageUrl': imageUrl,
-      'category': category,
-      'rating': rating,
-      'stock': stock,
-    };
-  }
 }
-
 class Category {
   final String id;
   final String name;
