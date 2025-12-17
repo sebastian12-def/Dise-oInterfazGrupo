@@ -51,16 +51,16 @@ class _LoginPageState extends State<LoginPage> {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
-    
+
     await Future.delayed(const Duration(seconds: 2));
-    
+
     setState(() => _isLoading = false);
-    
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('¡Inicio de sesión exitoso!')),
       );
-      
+
       // Call the callback to update parent state (AuthEntryPage / MyApp will react)
       widget.onLoginSuccess?.call();
     }
@@ -87,8 +87,8 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     'Bienvenido',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -96,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(color: Colors.grey.shade600),
                   ),
                   const SizedBox(height: 32),
-                  
+
                   InputField(
                     controller: _emailController,
                     labelText: 'Email',
@@ -106,13 +106,13 @@ class _LoginPageState extends State<LoginPage> {
                     validator: _validateEmail,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   PasswordField(
                     controller: _passwordController,
                     validator: _validatePassword,
                   ),
                   const SizedBox(height: 8),
-                  
+
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
@@ -128,14 +128,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  
+
                   AuthButton(
                     text: 'Iniciar Sesión',
                     onPressed: _handleLogin,
                     isLoading: _isLoading,
                   ),
                   const SizedBox(height: 16),
-                  
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -150,7 +150,9 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => LoginPage(onLoginSuccess: widget.onLoginSuccess),
+                                      builder: (_) => LoginPage(
+                                        onLoginSuccess: widget.onLoginSuccess,
+                                      ),
                                     ),
                                   );
                                 },

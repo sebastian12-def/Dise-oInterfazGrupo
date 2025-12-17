@@ -82,9 +82,9 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() => _isLoading = false);
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('¡Registro exitoso!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('¡Registro exitoso!')));
       if (widget.onNavigateToLogin != null) {
         widget.onNavigateToLogin!.call();
       } else {
@@ -96,10 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crear Cuenta'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Crear Cuenta'), centerTitle: true),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -116,8 +113,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 Text(
                   'Regístrate',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
@@ -125,7 +122,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
                 const SizedBox(height: 32),
-                
+
                 InputField(
                   controller: _nameController,
                   labelText: 'Nombre completo',
@@ -135,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   validator: _validateName,
                 ),
                 const SizedBox(height: 16),
-                
+
                 InputField(
                   controller: _emailController,
                   labelText: 'Email',
@@ -145,7 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   validator: _validateEmail,
                 ),
                 const SizedBox(height: 16),
-                
+
                 PasswordField(
                   controller: _passwordController,
                   labelText: 'Contraseña',
@@ -153,14 +150,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   showStrengthIndicator: true,
                 ),
                 const SizedBox(height: 16),
-                
+
                 PasswordField(
                   controller: _confirmPasswordController,
                   labelText: 'Confirmar contraseña',
                   validator: _validateConfirmPassword,
                 ),
                 const SizedBox(height: 16),
-                
+
                 Row(
                   children: [
                     Checkbox(
@@ -180,14 +177,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   ],
                 ),
                 const SizedBox(height: 24),
-                
+
                 AuthButton(
                   text: 'Registrarse',
                   onPressed: _handleRegister,
                   isLoading: _isLoading,
                 ),
                 const SizedBox(height: 16),
-                
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
