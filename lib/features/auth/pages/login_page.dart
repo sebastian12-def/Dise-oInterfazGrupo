@@ -57,12 +57,13 @@ class _LoginPageState extends State<LoginPage> {
     setState(() => _isLoading = false);
 
     if (mounted) {
+      // Call the callback first to update parent state
+      widget.onLoginSuccess?.call();
+
+      // Then show the SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('¡Inicio de sesión exitoso!')),
       );
-
-      // Call the callback to update parent state (AuthEntryPage / MyApp will react)
-      widget.onLoginSuccess?.call();
     }
   }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 /// Pantalla que permite CAMBIAR el email.
 /// Es un simple formulario con validación ligera.
@@ -17,7 +16,13 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Cambiar Email")),
+      appBar: AppBar(
+        title: const Text("Cambiar Email"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
 
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -54,7 +59,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                 );
 
                 /// Vuelve al perfil
-                context.pop();
+                Navigator.pop(context);
               },
               child: const Text("Guardar"),
             ),

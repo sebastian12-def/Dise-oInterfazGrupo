@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+
 /// Pantalla principal del PERFIL.
 /// Aquí el usuario ve su información personal.
 /// Esta pantalla NO cambia datos, solo los muestra.
@@ -10,9 +10,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Mi Perfil"),
-      ),
+      appBar: AppBar(title: const Text("Mi Perfil")),
 
       // El contenido principal va dentro de un padding
       body: Padding(
@@ -49,34 +47,17 @@ class ProfilePage extends StatelessWidget {
               leading: const Icon(Icons.email),
               title: const Text("Cambiar Email"),
               trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                // Navega a la pantalla para cambiar email
-                context.push('/profile/email');
-              },
+              onTap: () {},
             ),
 
             ListTile(
               leading: const Icon(Icons.person_outline),
               title: const Text("Seleccionar Género"),
               trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                context.push('/profile/gender');
-              },
+              onTap: () {},
             ),
 
             const Spacer(),
-
-            // BOTÓN CERRAR SESIÓN
-            ElevatedButton(
-              style: FilledButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: () {
-                /// En una app real:
-                /// - Limpias sesión
-                /// - Vuelves a login
-                context.go('/login');
-              },
-              child: const Text("Cerrar Sesión"),
-            )
           ],
         ),
       ),

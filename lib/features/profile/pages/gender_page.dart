@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 /// Pantalla para seleccionar el GÉNERO.
 /// Usa RadioListTile, que es ideal para seleccionar UNA opción.
@@ -17,7 +16,13 @@ class _GenderPageState extends State<GenderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Seleccionar Género")),
+      appBar: AppBar(
+        title: const Text("Seleccionar Género"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
 
       body: Column(
         children: [
@@ -62,7 +67,7 @@ class _GenderPageState extends State<GenderPage> {
               );
 
               /// Vuelve al perfil
-              context.pop();
+              Navigator.pop(context);
             },
             child: const Text("Guardar"),
           ),
