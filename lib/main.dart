@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'features/products/pages/product_list_page.dart';
 import 'features/products/pages/categories_page.dart';
 import 'features/auth/pages/auth_entry_page.dart';
@@ -7,6 +8,7 @@ import 'features/cart/pages/cart_page.dart';
 import 'features/profile/pages/profile_page.dart';
 import 'features/profile/pages/change_email_page.dart';
 import 'features/profile/pages/gender_page.dart';
+import 'features/cart/providers/cart_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -36,16 +38,19 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'E-Commerce App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (context) => CartProvider(),
+      child: MaterialApp(
+        title: 'E-Commerce App',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: _isLoggedIn
+            ? MainNavigationPage(onLogout: _handleLogout)
+            : AuthEntryPage(onLoginSuccess: _handleLoginSuccess),
       ),
-      home: _isLoggedIn
-          ? MainNavigationPage(onLogout: _handleLogout)
-          : AuthEntryPage(onLoginSuccess: _handleLoginSuccess),
     );
   }
 }

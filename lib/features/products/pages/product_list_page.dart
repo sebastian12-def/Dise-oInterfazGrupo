@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../core/api/api_service.dart';
 import '../../shared/models/product_model.dart';
+import '../../shared/models/category_model.dart';
 import '../widgets/product_card.dart';
 import '../widgets/category_card.dart';
 import 'product_detail_page.dart';
+import '../../cart/providers/cart_provider.dart';
 
 class ProductListPage extends StatefulWidget {
   final Category? category;
@@ -66,15 +69,18 @@ class _ProductListPageState extends State<ProductListPage> {
     }).toList();
   }
 
-  void _onAddToCart(Product product) {
+  /// Añade un producto al carrito y muestra una notificación.
+  void _addToCart(BuildContext context, Product product) {
+    Provider.of<CartProvider>(context, listen: false).addItem(product);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('${product.name} agregado al carrito'),
-        duration: const Duration(seconds: 2),
+        content: Text("'${product.name}' fue añadido al carrito."),
+        behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
-          label: 'Ver carrito',
+          label: 'VER',
           onPressed: () {
-            // Navegar al carrito
+            // Idealmente, esto debería cambiar a la pestaña del carrito.
+            // Por ahora, solo cierra el SnackBar.
           },
         ),
       ),
@@ -289,12 +295,12 @@ class _ProductListPageState extends State<ProductListPage> {
                                       MaterialPageRoute(
                                         builder: (context) => ProductDetailPage(
                                           product: product,
-                                          onAddToCart: () => _onAddToCart(product),
+                                          onAddToCart: () => _addToCart(context, product),
                                         ),
                                       ),
                                     );
                                   },
-                                  onAddToCart: () => _onAddToCart(product),
+                                  onAddToCart: () => _addToCart(context, product),
                                 );
                               },
                               childCount: filteredProducts.length,

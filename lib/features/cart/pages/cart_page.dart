@@ -1,127 +1,134 @@
 import 'package:flutter/material.dart';
-import '../models/cart_item_model.dart';
+import 'package:provider/provider.dart';
+import '../providers/cart_provider.dart';
 import '../widgets/cart_item_widget.dart';
 import '../widgets/cart_total_widget.dart';
+import 'checkout_page.dart';
 
-class CartPage extends StatefulWidget {
+class CartPage extends StatelessWidget {
   const CartPage({super.key});
-
-  @override
-  State<CartPage> createState() => _CartPageState();
-}
-
-class _CartPageState extends State<CartPage> {
-  List<CartItem> cartItems = [
-    CartItem(
-      name: "Nike Air Zoom Pegasus",
-      price: 299.43,
-      quantity: 1,
-      imageUrl: "https://images.unsplash.com/photo-1600181952515-6c3b21fd7690",
-    ),
-    CartItem(
-      name: "Nike Air Zoom Pegasus Red",
-      price: 299.43,
-      quantity: 1,
-      imageUrl: "https://images.unsplash.com/photo-1600180758890-6d4dcb28ca54",
-    ),
-  ];
-
-  double get subtotal =>
-      cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Your Cart"),
+        title: const Text("Tu Carrito"),
         centerTitle: false,
       ),
-
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-
-            /// 🛒 Lista de productos
-            Expanded(
-              child: ListView.builder(
-                itemCount: cartItems.length,
-                itemBuilder: (_, i) {
-                  final item = cartItems[i];
-                  return CartItemWidget(
-                    item: item,
-                    onIncrease: () {
-                      setState(() {
-                        cartItems[i] = item.copyWith(
-                          quantity: item.quantity + 1,
-                        );
-                      });
-                    },
-                    onDecrease: () {
-                      if (item.quantity > 1) {
-                        setState(() {
-                          cartItems[i] = item.copyWith(
-                            quantity: item.quantity - 1,
-                          );
-                        });
-                      }
-                    },
-                    onRemove: () {
-                      setState(() => cartItems.removeAt(i));
-                    },
-                  );
-                },
-              ),
-            ),
-
-            /// 💰 Total
-            CartTotalWidget(
-              subtotal: subtotal,
-              shipping: 40,
-              tax: 128,
-            ),
-
-            const SizedBox(height: 20),
-
-            /// 🔘 BOTÓN CHECK OUT 
-            SizedBox(
-              width: 200,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/payment-method');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFECE2F9),
-                  foregroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+      body: Consumer<CartProvider>(
+        builder: (context, cart, child) {
+          if (cart.items.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.shopping_cart_outlined,
+                    size: 80,
+                    color: Colors.grey[400],
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                child: const Text("Check Out"),
-              ),
-            ),
-
-            const SizedBox(height: 12),
-            SizedBox(
-              width: 200,
-              child: ElevatedButton(
-                onPressed: (){
-                  Navigator.pushNamed(context, '/order-history');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[200],
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Tu carrito está vacío',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey[600],
+                    ),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Agrega productos para comenzar',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[500],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final shipping = 40.0;
+          final tax = cart.totalPrice * 0.16;
+
+          return Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: cart.items.length,
+                    itemBuilder: (_, i) {
+                      final item = cart.items[i];
+                      return CartItemWidget(
+                        item: item,
+                        onIncrease: () {
+                          cart.updateQuantity(item.name, item.quantity + 1);
+                        },
+                        onDecrease: () {
+                          cart.updateQuantity(item.name, item.quantity - 1);
+                        },
+                        onRemove: () {
+                          cart.removeItem(item.name);
+                        },
+                      );
+                    },
+                  ),
                 ),
-                child: const Text("Ver historial"),
-             ),
+
+                CartTotalWidget(
+                  subtotal: cart.totalPrice,
+                  shipping: shipping,
+                  tax: tax,
+                ),
+
+                const SizedBox(height: 20),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const CheckoutPage()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: const Text(
+                      "Comprar Ahora",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/order-history');
+                    },
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child: const Text("Ver historial de pedidos"),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

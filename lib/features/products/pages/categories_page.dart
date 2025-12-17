@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../shared/models/product_model.dart';
+import '../../shared/models/category_model.dart';
 import 'product_list_page.dart';
 
 class CategoriesPage extends StatelessWidget {
