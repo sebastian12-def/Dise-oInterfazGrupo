@@ -72,7 +72,9 @@ class _LoginPageState extends State<LoginPage> {
         if (result['success'] == true) {
           // El token se guardó automáticamente en el dispositivo
           // Llamar el callback para actualizar el estado del padre
+          print('🎉 Login exitoso, llamando onLoginSuccess callback');
           widget.onLoginSuccess?.call();
+          print('✅ Callback onLoginSuccess ejecutado');
 
           // Mostrar mensaje de éxito
           ScaffoldMessenger.of(context).showSnackBar(

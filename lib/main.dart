@@ -34,23 +34,29 @@ class _MyAppState extends State<MyApp> {
   Future<void> _checkLoginStatus() async {
     // Verificar si el usuario ya tiene token guardado
     final token = await AuthService.getStoredToken();
+    print('🔐 Token guardado: ${token != null ? "SÍ" : "NO"}');
     if (mounted) {
       setState(() {
         _isLoggedIn = token != null && token.isNotEmpty;
         _isChecking = false;
+        print('📊 Estado actualizado: _isLoggedIn = $_isLoggedIn, _isChecking = $_isChecking');
       });
     }
   }
 
   void _handleLoginSuccess() {
+    print('✅ _handleLoginSuccess llamado');
     setState(() {
       _isLoggedIn = true;
+      print('📊 Estado actualizado en _handleLoginSuccess: _isLoggedIn = $_isLoggedIn');
     });
   }
 
   void _handleLogout() {
+    print('🚪 _handleLogout llamado');
     setState(() {
       _isLoggedIn = false;
+      print('📊 Estado actualizado en _handleLogout: _isLoggedIn = $_isLoggedIn');
     });
   }
 
