@@ -24,7 +24,10 @@ class _AuthEntryPageState extends State<AuthEntryPage> {
       body: SafeArea(
         child: _showLogin
             ? LoginPage(onLoginSuccess: widget.onLoginSuccess)
-            : RegisterPage(onNavigateToLogin: _goToLogin),
+            : RegisterPage(
+                onNavigateToLogin: _goToLogin,
+                onLoginSuccess: widget.onLoginSuccess,
+              ),
       ),
     );
   }

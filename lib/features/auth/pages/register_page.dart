@@ -2,11 +2,18 @@ import 'package:flutter/material.dart';
 import '../widgets/input_field.dart';
 import '../widgets/password_field.dart';
 import '../widgets/auth_button.dart';
+// Importar el servicio de autenticación
+import '../../../core/api/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback? onNavigateToLogin;
+  final VoidCallback? onLoginSuccess;
 
-  const RegisterPage({super.key, this.onNavigateToLogin});
+  const RegisterPage({
+    super.key,
+    this.onNavigateToLogin,
+    this.onLoginSuccess,
+  });
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -68,6 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> _handleRegister() async {
+    // Verificar que el usuario haya aceptado los términos
     if (!_acceptTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Acepta los términos y condiciones')),
@@ -75,20 +83,65 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
+    // Validar que todos los campos del formulario sean correctos
     if (!_formKey.currentState!.validate()) return;
 
+    // Mostrar indicador de carga mientras se envían los datos al backend
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() => _isLoading = false);
 
-    if (mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('¡Registro exitoso!')));
-      if (widget.onNavigateToLogin != null) {
-        widget.onNavigateToLogin!.call();
-      } else {
-        Navigator.pop(context);
+    try {
+      // Llamar al servicio de autenticación para registrar el usuario
+      // Se envían: nombre, email, contraseña y género (género es opcional)
+      final result = await AuthService.register(
+        nombre: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        gender: 'male', // Puedes cambiar esto o hacerlo dinámico
+      );
+
+      // Ocultar indicador de carga
+      setState(() => _isLoading = false);
+
+      if (mounted) {
+        // Si el registro fue exitoso (success = true)
+        if (result['success'] == true) {
+          // El token se guardó automáticamente en el dispositivo
+          // Mostrar mensaje de éxito
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('¡Registro exitoso! Bienvenido'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          
+          // Navegar a la pantalla de login o de inicio
+          if (widget.onNavigateToLogin != null) {
+            widget.onNavigateToLogin!.call();
+          } else {
+            Navigator.pop(context);
+          }
+        } else {
+          // Si hubo error (por ejemplo, email ya existe)
+          // Mostrar el mensaje de error que devolvió el backend
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(result['error'] ?? 'Error en el registro'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Si hay error de conexión o excepción no manejada
+      setState(() => _isLoading = false);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }

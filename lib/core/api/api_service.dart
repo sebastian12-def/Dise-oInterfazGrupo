@@ -7,7 +7,7 @@ class ApiService {
 
   // Para Android emulador: 'http://10.0.2.2:5432/api'
   // Para web: 'http://localhost:5432/api' 
-  static const String baseUrl = 'http://localhost:5432/api';
+  static const String baseUrl = 'http://localhost:3000/api';
   // ======================================
   
   final Map<String, String> _headers = {
